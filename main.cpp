@@ -17,6 +17,7 @@ using namespace std;
 // global var
 vector<string> dict;
 vector<string> perm_list;
+vector<string> anagrams;
 
 // input data into vector
 void read_file(ifstream& infile){
@@ -131,9 +132,12 @@ int main() {
 	cout << "Here are all possible Permutations of your input: "<<endl;
 	cout << "-------------------------------------------------"<<endl;
 	permutations(input, 0, input.length()-1);
-	for(int i =0; i < perm_list.size(); i++){
-		cout << perm_list.at(i) << endl;
-	}
+		for(int i =0; i < perm_list.size(); i++){
+			cout << perm_list.at(i) << endl;
+		}
+
+	// anagram test
+	findAnagrams(input);
 		
 	
 }

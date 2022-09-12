@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 #include <string>
 #include <cstdlib>
 
@@ -224,6 +226,51 @@ void HashTable::searchTable(string word)
 	
 }
 
+void HashTable::findAnagrams(string word){
+	vector<string> anagramList;
+	int index = hashFunction(word);
+
+	// traverse list
+	item* current = hashArray[index]; // current points to index/list
+	
+	if(current->word == "empty")
+	{
+		cout << "INDEX = " << index << " is empty";
+	}
+	else
+	{
+		
+		while(current != NULL)
+		{
+			if( anagramTest(word, current->word)){
+				anagramList.push_back(current->word);
+			}
+			
+			current = current->next;
+		}
+		
+	}
+
+	for(int i =0; i < anagramList.size(); i++){
+			cout << anagramList.at(i) << endl;
+		}
+}
+bool HashTable::anagramTest(string one, string two){
+	if(one.length() != two.length())
+		cout << one<<" == "<<two << " : FALSE";
+	
+	else{
+		sort(one.begin(), one.end());
+		sort(two.begin(), two.end());
+
+		if(one == two) {
+			cout << one<<" == "<<two << " : TRUE";
+			return;
+		}
+	}
+
+	cout << one<<" == "<<two << " : FALSE";
+}
 
 // remove items
 void HashTable::removeItem(string word)

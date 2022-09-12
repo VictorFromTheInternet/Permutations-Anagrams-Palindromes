@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include <cstdlib>
 
 using namespace std;
@@ -41,8 +43,10 @@ class HashTable
 		void printItemsInIndex(int index);
 
 		
-		void searchTable(string item);	// will search the array index (which points to linked list)
-		void removeItem(string item);
+		void searchTable(string word);	// will search the array index (which points to linked list)
+		void findAnagrams(string word);
+		bool anagramTest(string one, string two);
+		void removeItem(string word);
 		
 };
 
