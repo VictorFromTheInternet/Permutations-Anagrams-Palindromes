@@ -39,8 +39,9 @@ class HashTable
 		int indexSize(int index);
 		
 		// output functions 
-		void printTable();
-		void printItemsInIndex(int index);
+		void printTable(ofstream& outfile);
+		void printItemsInIndex(ofstream& outfile, int index);
+	
 
 		
 		void searchTable(string word);	// will search the array index (which points to linked list)

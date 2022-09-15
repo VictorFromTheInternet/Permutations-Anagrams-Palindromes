@@ -2,6 +2,9 @@
 
 	This program will use string input, and then output permutations, anagrams from a data file, and test if its a palindrome
 
+	Notes: fix the anagram search feature (core dumped), 
+				is probably a base case problem
+
 */
 #include <iostream>
 #include <fstream>
@@ -26,8 +29,8 @@ void read_file(ifstream& infile){
 		string temp = "";
 		getline(infile, temp);
 		dict.push_back(temp);
-		//cout << temp;
 	}
+
 }
 
 void isPalindrome(string str){
@@ -40,7 +43,7 @@ void isPalindrome(string str){
 			if((int)(str[left]+32) != (int)str[right]	&&	// L , r
 				 (int)str[left] 		 != (int)str[right]+32){ // l, R
 
-				cout << "String: "<<str<<" is NOT a Palindrome"<<endl;
+				cout << "String: "<<str<<" is NOT a Palindrome"<<endl << endl;
 				return;
 			}
 		} 	
@@ -51,7 +54,7 @@ void isPalindrome(string str){
 		right--;
 	}
 
-	cout << "String: "<<str<<" IS a Palindrome"<<endl;
+	cout << "String: "<<str<<" IS a Palindrome"<<endl<<endl;
 }
 
 void permutations(string str, int l, int r){
@@ -62,7 +65,7 @@ void permutations(string str, int l, int r){
 	}
 	// Permute
   else  { 	
-		cout << str << endl;
+		//cout << str << endl;
     for (int i = l; i <= r; i++) { 
     	swap(str[l], str[i]); // swap indexes
 
@@ -71,6 +74,7 @@ void permutations(string str, int l, int r){
   
       swap(str[l], str[i]); //backtrack (Next Letter)
 		}	
+		
   } 	
 }
 
@@ -100,44 +104,52 @@ string to_uppercase(string input){
 
 
 
+
 int main() {
 	// create an obj, insert some strings
 	HashTable ht;
 
 	// open file
 	ifstream infile;
+	ofstream outfile_table;
+	ofstream outfile_perm;
 	infile.open("dictionary.txt");
 		if(!infile){cout << "ERROR could not open infile" <<endl;}
+	outfile_table.open("table_output.txt");
+	outfile_perm.open("permutations_output.txt");
 
+	// read file and add items to table
 	read_file(infile);
-	/*
+	
 		for(int i=0; i<dict.size(); i++){
 			ht.addItem(dict.at(i));
 		}
+
+		cout << "Printing table ..." << endl;
+		ht.printTable(outfile_table);
+		cout << "Done printing, check 'table_output.txt'" << endl << endl;
+		
 	
-		ht.printTable();
-	*/
 
 	// prompt user
 	string input;
 	cout << "Hello, Enter a one word string: ";
 	cin >> input;
-
 	input = to_uppercase(input);
 
 	// palindrome
 	isPalindrome(input);
 
 	// permutations
-	cout << "Here are all possible Permutations of your input: "<<endl;
-	cout << "-------------------------------------------------"<<endl;
-	permutations(input, 0, input.length()-1);
+	permutations(input, 0, input.size()-1);
+	cout << "To see all possible Permutations of your input ("<<perm_list.size()<<"),\ncheck 'permutations_output.txt' "<<endl;
 		for(int i =0; i < perm_list.size(); i++){
-			cout << perm_list.at(i) << endl;
+			outfile_perm << perm_list.at(i) << endl;
 		}
+		
 
 	// anagram test
-	findAnagrams(input);
+	ht.findAnagrams(input);
 		
 	
 }

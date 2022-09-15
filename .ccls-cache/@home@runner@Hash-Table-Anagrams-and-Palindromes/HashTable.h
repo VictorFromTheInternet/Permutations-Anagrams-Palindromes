@@ -4,16 +4,18 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include <cstdlib>
 
 using namespace std;
 
 
-#ifndef HASH_H
-#define HASH_H
+#ifndef HashTable_H
+#define HashTable_H
 
 
-class hashTable
+class HashTable
 {
 	private:
 		
@@ -30,23 +32,22 @@ class hashTable
 		item* hashArray[tableSize];
 	
 	public:
-		hashTable();
-		~hashTable();
+		HashTable();
+		~HashTable();
 		int hashFunction(string key);		// will return int/index value (where to store)
 		void addItem(string word);
 		int indexSize(int index);
 		
 		// output functions 
-		void printTable();
-		void printItemsInIndex(int index);
+		void printTable(ofstream& outfile);
+		void printItemsInIndex(ofstream& outfile, int index);
+	
+
 		
-		// output functions for output file
-		void printTable(ofstream&);
-		void printTableSummary(ofstream&);
-		void printItemsInIndex(int index, ofstream&);
-		
-		void searchIndex(string item);	// will search the array index (which points to linked list)
-		void removeItem(string item);
+		void searchTable(string word);	// will search the array index (which points to linked list)
+		void findAnagrams(string word);
+		bool anagramTest(string one, string two);
+		void removeItem(string word);
 		
 };
 

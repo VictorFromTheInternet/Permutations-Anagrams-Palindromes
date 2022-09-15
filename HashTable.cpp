@@ -136,23 +136,23 @@ int HashTable::indexSize(int index)
 
 
 // output index
-void HashTable::printItemsInIndex(int index)
+void HashTable::printItemsInIndex(ofstream& outfile, int index)
 {
 	item* current = hashArray[index]; // current points to index/list
 	
 	if(current->word == "empty")
 	{
-		cout << "INDEX = " << index << " is empty";
+		outfile << "INDEX = " << index << " is empty";
 	}
 	else
 	{
-		cout << "INDEX " << index <<  " contains the following items" << endl << endl;
+		outfile << "INDEX " << index <<  " contains the following items" << endl << endl;
 		
 		while(current != NULL)
 		{
 			
-			cout << current->word << endl;
-			cout << "------------" << endl;
+			outfile << current->word << endl;
+			outfile << "------------" << endl;
 			
 			current = current->next;
 		}
@@ -163,24 +163,24 @@ void HashTable::printItemsInIndex(int index)
 
 
 // output table
-void HashTable::printTable()
+void HashTable::printTable(ofstream& outfile)
 {
 	int number;
 	
-	cout << "---------------------------------------------------------" << endl;
-	cout << "                 FULL HASH TABLE CONTENTS" << endl;
-	cout << "---------------------------------------------------------" << endl << endl;
+	outfile << "---------------------------------------------------------" << endl;
+	outfile << "                 FULL HASH TABLE CONTENTS" << endl;
+	outfile << "---------------------------------------------------------" << endl << endl;
 	for(int i=0; i < tableSize; i++)
 	{
 		number = indexSize(i);
-		cout << endl;
-		cout << "Number of items in list location " << i << ": " << number << endl;
-		cout << "---------------------------------------" << endl;
+		outfile << endl;
+		outfile << "Number of items in list location " << i << ": " << number << endl;
+		outfile << "---------------------------------------" << endl;
 		
 		// output all the items at current index
-		printItemsInIndex(i);
+		printItemsInIndex(outfile, i);
 		
-		cout << endl;
+		outfile << endl;
 
 	}	
 	
@@ -227,8 +227,8 @@ void HashTable::searchTable(string word)
 }
 
 void HashTable::findAnagrams(string word){
-	vector<string> anagramList;
-	int index = hashFunction(word);
+	vector<string> anagramList; // stores anagrams
+	int index = hashFunction(word); // possible index
 
 	// traverse list
 	item* current = hashArray[index]; // current points to index/list
@@ -237,20 +237,17 @@ void HashTable::findAnagrams(string word){
 	{
 		cout << "INDEX = " << index << " is empty";
 	}
-	else
-	{
-		
-		while(current != NULL)
-		{
-			if( anagramTest(word, current->word)){
+	else{
+		while(current != NULL){
+			if( anagramTest(word, current->word))
 				anagramList.push_back(current->word);
-			}
 			
 			current = current->next;
 		}
 		
 	}
 
+	// output possible anagrams from list
 	for(int i =0; i < anagramList.size(); i++){
 			cout << anagramList.at(i) << endl;
 		}

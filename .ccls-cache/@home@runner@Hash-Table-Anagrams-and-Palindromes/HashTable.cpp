@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 #include <string>
 #include <cstdlib>
 
@@ -16,7 +18,7 @@ using namespace std;
 
 
 // default constructor
-hashTable::hashTable()
+HashTable::HashTable()
 {
 	// initialize each index/pointer/empty node item
 	for(int i=0; i < tableSize; i++)
@@ -32,7 +34,7 @@ hashTable::hashTable()
 
 
 // destructor
-hashTable::~hashTable()
+HashTable::~HashTable()
 {
    item* current; 
    
@@ -57,7 +59,7 @@ hashTable::~hashTable()
 
 
 // add items, point the root's link, or replace the info in root
-void hashTable::addItem(string word)
+void HashTable::addItem(string word)
 {
 	
 	// run the name through the hash function to determine storage index
@@ -95,7 +97,7 @@ void hashTable::addItem(string word)
 }
 
 //index size
-int hashTable::indexSize(int index)
+int HashTable::indexSize(int index)
 {
 	
 	// declare count and initialize to zero
@@ -133,98 +135,12 @@ int hashTable::indexSize(int index)
 }
 
 
-
-
-
-/*************************************************************
-  This function outputs the one entire list specified by 
-  the hashArray index location. Output is sent to screen.
-*************************************************************/
-void hashTable::printItemsInIndex(int index)
+// output index
+void HashTable::printItemsInIndex(ofstream& outfile, int index)
 {
 	item* current = hashArray[index]; // current points to index/list
 	
-	if(current->name == "empty")
-	{
-		cout << "INDEX = " << index << " is empty";
-	}
-	else
-	{
-		cout << "INDEX " << index <<  " contains the following items" << endl << endl;
-		
-		while(current != NULL)
-		{
-			
-			cout << current->name << endl;
-			cout << current->phoneNumber << endl;
-			cout << "------------" << endl;
-			
-			current = current->next;
-		}
-		
-	}
-	
-}
-
-
-/*************************************************************
-  This function outputs the entire hash table to the screen.
-*************************************************************/
-void hashTable::printTable()
-{
-	int number;
-	
-	cout << "---------------------------------------------------------" << endl;
-	cout << "                 FULL HASH TABLE CONTENTS" << endl;
-	cout << "---------------------------------------------------------" << endl << endl;
-	for(int i=0; i < tableSize; i++)
-	{
-		number = numberOfItemsInIndex(i);
-		cout << endl;
-		cout << "Number of items in list location " << i << ": " << number << endl;
-		cout << "---------------------------------------" << endl;
-		
-		// output all the items at current index
-		printItemsInIndex(i);
-		
-		cout << endl;
-
-	}	
-	
-}
-
-
-/*************************************************************
-  This function outputs the first item of each list
-  and the number of items in each list. 
-  Output is sent to output file.
-*************************************************************/
-void hashTable::printTableSummary(ofstream& outfile)
-{
-	int number;
-	for(int i=0; i < tableSize; i++)
-	{
-		number = numberOfItemsInIndex(i);
-		outfile << "INDEX = " << i << endl;
-		outfile << "Name: " << hashArray[i]->name << endl;
-		outfile << "Phone: " << hashArray[i]->phoneNumber << endl;
-		outfile << "Number of items in list location " << i << ": " << number << endl;
-		outfile << "-------------------------------------------" << endl;
-
-	}
-		
-}
-
-
-/*************************************************************
-  This function outputs the one entire list specified by 
-  the hashArray index location. Output is sent to a file.
-*************************************************************/
-void hashTable::printItemsInIndex(int index, ofstream& outfile)
-{
-	item* current = hashArray[index];
-	
-	if(current->name == "empty")
+	if(current->word == "empty")
 	{
 		outfile << "INDEX = " << index << " is empty";
 	}
@@ -235,22 +151,19 @@ void hashTable::printItemsInIndex(int index, ofstream& outfile)
 		while(current != NULL)
 		{
 			
-			outfile << current->name << endl;
-			outfile << current->phoneNumber << endl;
+			outfile << current->word << endl;
 			outfile << "------------" << endl;
 			
 			current = current->next;
 		}
 		
 	}
-		
+	
 }
 
 
-/*************************************************************
-  This function outputs the entire hash table to a file.
-*************************************************************/
-void hashTable::printTable(ofstream& outfile)
+// output table
+void HashTable::printTable(ofstream& outfile)
 {
 	int number;
 	
@@ -259,13 +172,13 @@ void hashTable::printTable(ofstream& outfile)
 	outfile << "---------------------------------------------------------" << endl << endl;
 	for(int i=0; i < tableSize; i++)
 	{
-		number = numberOfItemsInIndex(i);
+		number = indexSize(i);
 		outfile << endl;
 		outfile << "Number of items in list location " << i << ": " << number << endl;
 		outfile << "---------------------------------------" << endl;
 		
 		// output all the items at current index
-		printItemsInIndex(i, outfile);
+		printItemsInIndex(outfile, i);
 		
 		outfile << endl;
 
@@ -274,39 +187,29 @@ void hashTable::printTable(ofstream& outfile)
 }
 
 
-/*************************************************************
-  This function will output the phone number of a specified
-  person's name. The name is sent in as a parameter.
-*************************************************************/
-void hashTable::retrievePhoneNumber(string name)
+// search table
+void HashTable::searchTable(string word)
 {
 	// run the name through the hash function to determine which list
 	// the person should be if they are in the hash table
-	int index = hashFunction(name);
+	int index = hashFunction(word);
 	
 	
 	// declare and initialize working variables
-	bool foundName = false;
-	string phoneNumber;
+	bool foundItem = false;
 	
 	// create and initialize current pointer to the beginning of the correct list
 	item* current = hashArray[index];
 	
 	// traverse through the list until the item is found or the end is reached
-	while(current != nullptr && foundName != true)
+	while(current != nullptr && foundItem != true)
 	{
 		// if the person is found
-		if(current->name == name)
-		{
-			// update foundName
-			foundName = true;
-			
-			// get the phone number
-			phoneNumber = current->phoneNumber;
-		}
+		if(current->word == word)
+			foundItem = true;
 		
 		// For testing...output all the names that get searched during the process
-		cout << current->name << endl;
+		cout << current->word << endl;
 		
 		// advance to the next person in the list
 		current = current->next;
@@ -314,25 +217,64 @@ void hashTable::retrievePhoneNumber(string name)
 	}
 	
 	// after traversal, output phone number or message if not found
-	if(foundName == true)
-		cout << "Phone number: " << phoneNumber << endl;
+	if(foundItem == true)
+		cout << "Word was found at index: " << index << endl;
 		
 	else
-		cout << "Name: " << name << ", was not found in the hash table" << endl;
+		cout << "Word: " << word << ", was not found in the hash table" << endl;
 	
 	
 }
 
+void HashTable::findAnagrams(string word){
+	vector<string> anagramList; // stores anagrams
+	int index = hashFunction(word); // possible index
 
-/*************************************************************
-  This function will remove a node item from the hash table.
-  The name of the person to remove is sent in as a parameter.
-*************************************************************/
-void hashTable::removeItem(string name)
+	// traverse list
+	item* current = hashArray[index]; // current points to index/list
+	
+	if(current->word == "empty")
+	{
+		cout << "INDEX = " << index << " is empty";
+	}
+	else{
+		while(current != NULL){
+			if( anagramTest(word, current->word))
+				anagramList.push_back(current->word);
+			
+			current = current->next;
+		}
+		
+	}
+
+	// output possible anagrams from list
+	for(int i =0; i < anagramList.size(); i++){
+			cout << anagramList.at(i) << endl;
+		}
+}
+bool HashTable::anagramTest(string one, string two){
+	if(one.length() != two.length())
+		cout << one<<" == "<<two << " : FALSE";
+	
+	else{
+		sort(one.begin(), one.end());
+		sort(two.begin(), two.end());
+
+		if(one == two) {
+			cout << one<<" == "<<two << " : TRUE";
+			return;
+		}
+	}
+
+	cout << one<<" == "<<two << " : FALSE";
+}
+
+// remove items
+void HashTable::removeItem(string word)
 {
 	// run name through hash function to determine index of 
 	// list where the person should be.
-	int index = hashFunction(name);
+	int index = hashFunction(word);
 	
 	// declare pointers needed for deletion process
 	item* deletePointer;
@@ -341,25 +283,24 @@ void hashTable::removeItem(string name)
 	
 
 	// Case 0 - bucket is empty
-	if(hashArray[index]->name == "empty" && hashArray[index]->phoneNumber == "empty")
+	if(hashArray[index]->word == "empty")
 	{
-		cout << name << " was not found in the Hash Table" << endl;
+		cout << word << " was not found in the Hash Table" << endl;
 	}
 	
 	// Case 1 - only 1 item contained in bucket and that item has matching name
-	else if(hashArray[index]->name == name && hashArray[index]->next == nullptr)
+	else if(hashArray[index]->word == word && hashArray[index]->next == nullptr)
 	{
 		// leave the node item there but change its name and phone number to empty
-		hashArray[index]->name = "empty";
-		hashArray[index]->phoneNumber = "empty";
+		hashArray[index]->word = "empty";
 		
 		// output confirmation message
-		cout << name << " was removed from the Hash Table" << endl;
+		cout << word << " was removed from the Hash Table" << endl;
 	}
 	
 	
 	// Case 2 - match is located in the first item in the bucket but there are more items in the bucket
-	else if(hashArray[index]->name == name)
+	else if(hashArray[index]->word == word)
 	{
 		// set deletePointer to keep track of where the item to be deleted is
 		deletePointer = hashArray[index];
@@ -371,7 +312,7 @@ void hashTable::removeItem(string name)
 		delete deletePointer;
 		
 		// output confirmation message
-		cout << name << " was removed from the Hash Table" << endl;
+		cout << word << " was removed from the Hash Table" << endl;
 	}
 	
 	
@@ -383,7 +324,7 @@ void hashTable::removeItem(string name)
 		trail = hashArray[index];
 		
 		// continue to traverse the list as long as end is not reached and no match
-		while(current != nullptr && current->name != name)
+		while(current != nullptr && current->word != word)
 		{
 			// advance the trail and current pointers
 			trail = current;	// move the trail up to current
@@ -393,7 +334,7 @@ void hashTable::removeItem(string name)
 		// Case 3.1 - no match found and end of list reached
 		if(current == nullptr)
 		{
-			cout << name << " was NOT found in the Hash Table" << endl;
+			cout << word << " was NOT found in the Hash Table" << endl;
 		}
 		// Case 3.2 - match is found
 		
@@ -409,7 +350,7 @@ void hashTable::removeItem(string name)
 			
 			
 			// output confirmation message
-			cout << name << " was removed from the Hash Table" << endl;
+			cout << word << " was removed from the Hash Table" << endl;
 		}
 		
 	}
@@ -417,15 +358,8 @@ void hashTable::removeItem(string name)
 }
 
 
-/*************************************************************
-  This is the hash function that will determine the index
-  location of where to store the node item. The ASCII values
-  of all the charaters of key (which here is the person's 
-  name) are added together. That sum is then modded by the
-  size of the hash array to determine the index of where the 
-  node item will be stored.
-*************************************************************/
-int hashTable::hashFunction(string key)
+// hash function
+int HashTable::hashFunction(string key)
 {
 	
 	int hashSum = 0;
