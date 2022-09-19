@@ -2,8 +2,10 @@
 
 	This program will use string input, and then output permutations, anagrams from a data file, and test if its a palindrome
 
-	Notes: fix the anagram search feature (core dumped), 
-				is probably a base case problem
+	Notes: troubleshoot & test the anagram search feature 
+
+				maybe try a hash sum function with the hash index 
+				to be able to troubleshoot the issue with the searching
 
 */
 #include <iostream>
@@ -149,6 +151,7 @@ int main() {
 		
 
 	// anagram test
+	ht.searchTable(input);
 	ht.findAnagrams(input);
 		
 	

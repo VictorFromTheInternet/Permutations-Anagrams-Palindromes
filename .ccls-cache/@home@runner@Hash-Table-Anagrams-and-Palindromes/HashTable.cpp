@@ -152,7 +152,7 @@ void HashTable::printItemsInIndex(ofstream& outfile, int index)
 		{
 			
 			outfile << current->word << endl;
-			outfile << "------------" << endl;
+			//outfile << "------------" << endl;
 			
 			current = current->next;
 		}
@@ -193,6 +193,8 @@ void HashTable::searchTable(string word)
 	// run the name through the hash function to determine which list
 	// the person should be if they are in the hash table
 	int index = hashFunction(word);
+	cout << "\n"<<word<<" hash index is: " << index << endl;
+	cout << "-----------------------------" <<endl;
 	
 	
 	// declare and initialize working variables
@@ -218,7 +220,7 @@ void HashTable::searchTable(string word)
 	
 	// after traversal, output phone number or message if not found
 	if(foundItem == true)
-		cout << "Word was found at index: " << index << endl;
+		cout << "Word:"<<word<<" was found at index: " << index << endl;
 		
 	else
 		cout << "Word: " << word << ", was not found in the hash table" << endl;
@@ -238,7 +240,7 @@ void HashTable::findAnagrams(string word){
 		cout << "INDEX = " << index << " is empty";
 	}
 	else{
-		while(current != NULL){
+		while(current->next != NULL){
 			if( anagramTest(word, current->word))
 				anagramList.push_back(current->word);
 			
@@ -254,19 +256,20 @@ void HashTable::findAnagrams(string word){
 }
 bool HashTable::anagramTest(string one, string two){
 	if(one.length() != two.length())
-		cout << one<<" == "<<two << " : FALSE";
+		cout << one<<" == "<<two << " : FALSE"<< endl;
 	
 	else{
 		sort(one.begin(), one.end());
 		sort(two.begin(), two.end());
 
 		if(one == two) {
-			cout << one<<" == "<<two << " : TRUE";
-			return;
+			cout << one<<" == "<<two << " : TRUE"<<endl;
+			return true;
 		}
 	}
 
-	cout << one<<" == "<<two << " : FALSE";
+	cout << one<<" == "<<two << " : FALSE" << endl;
+	return false;
 }
 
 // remove items
