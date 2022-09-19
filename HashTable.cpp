@@ -193,7 +193,7 @@ void HashTable::searchTable(string word)
 	// run the name through the hash function to determine which list
 	// the person should be if they are in the hash table
 	int index = hashFunction(word);
-	cout << "\n"<<word<<" hash index is: " << index << endl;
+	cout << "\n"<<word<<"'s hash index is: " << index << endl;
 	cout << "-----------------------------" <<endl;
 	
 	
@@ -220,10 +220,10 @@ void HashTable::searchTable(string word)
 	
 	// after traversal, output phone number or message if not found
 	if(foundItem == true)
-		cout << "Word:"<<word<<" was found at index: " << index << endl;
+		cout << "\nWord:"<<word<<" was found at index: " << index << endl;
 		
 	else
-		cout << "Word: " << word << ", was not found in the hash table" << endl;
+		cout << "\nWord: " << word << ", was not found in the hash table" << endl;
 	
 	
 }
@@ -234,7 +234,9 @@ void HashTable::findAnagrams(string word){
 
 	// traverse list
 	item* current = hashArray[index]; // current points to index/list
-	
+
+	cout << "\nComparing "<<word<<"'s hash index for anagrams: " << endl;
+	cout << "------------------------------------------------" <<endl;
 	if(current->word == "empty")
 	{
 		cout << "INDEX = " << index << " is empty";
@@ -250,6 +252,8 @@ void HashTable::findAnagrams(string word){
 	}
 
 	// output possible anagrams from list
+	cout << "\nAnagrams found at index: " << index << endl;
+	cout << "------------------------------" <<endl;
 	for(int i =0; i < anagramList.size(); i++){
 			cout << anagramList.at(i) << endl;
 		}
